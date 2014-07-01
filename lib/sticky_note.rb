@@ -17,6 +17,7 @@ module StickyNote
 
       define_method method do |*args|
         cache_key = memoize_key(method, args)
+        ap cache_key
         Rails.cache.fetch(cache_key, options) do
           send(original_method, *args)
         end
@@ -46,9 +47,9 @@ module StickyNote
   end
 
   def memoize_key(method, *args)
-    # raise error if self does not respond to cache_key
-    # or better yet -- use cache_key if exists, use class name if not
-    "memoize-#{cache_key}-#{method}-#{args.join}"
+    sub_key = respond_to?(:cache_key) ? cache_key : self.class.name
+
+    "memoize-#{sub_key}-#{method}-#{args.join}"
   end
 end
 
