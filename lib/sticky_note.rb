@@ -17,7 +17,6 @@ module StickyNote
 
       define_method method do |*args|
         cache_key = memoize_key(method, args)
-        ap cache_key
         Rails.cache.fetch(cache_key, options) do
           send(original_method, *args)
         end
